@@ -1,0 +1,139 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: cubestore-worker-1
+  labels:
+    app: cubestore-worker-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cubestore-worker-1
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: cubestore-worker-1
+    spec:
+      containers:
+      - name: cubestore-worker-1
+        image: cubejs/cubestore:latest
+        ports:
+        - containerPort: 10001
+        env:
+        - name: CUBESTORE_WORKERS
+          value: "cubestore-worker-1:10001,cubestore-worker-2:10002"
+        - name: CUBESTORE_SERVER_NAME
+          value: "cubestore-worker-1:10001"
+        - name: CUBESTORE_WORKER_PORT
+          value: "10001"
+        - name: CUBESTORE_REMOTE_DIR
+          value: "/cube/data"
+        - name: CUBESTORE_META_ADDR
+          value: "cubestore-router:9999"
+        volumeMounts:
+        - mountPath: /cube/data
+          name: cubestore-worker-1-pvc-0
+      volumes:
+      - name: cubestore-worker-1-pvc-0
+        persistentVolumeClaim:
+          claimName: cubestore-worker-1-pvc-0
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: cubestore-worker-1-pvc-0
+  name: cubestore-worker-1-pvc-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    app: cubestore-worker-1
+  name: cubestore-worker-1
+spec:
+  ports:
+  - name: "10001"
+    port: 10001
+    targetPort: 10001
+  selector:
+    app: cubestore-worker-1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: cubestore-worker-2
+  labels:
+    app: cubestore-worker-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cubestore-worker-2
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: cubestore-worker-2
+    spec:
+      containers:
+      - name: cubestore-worker-2
+        image: cubejs/cubestore:latest
+        ports:
+        - containerPort: 10002
+        env:
+        - name: CUBESTORE_WORKERS
+          value: "cubestore-worker-1:10001,cubestore-worker-2:10002"
+        - name: CUBESTORE_SERVER_NAME
+          value: "cubestore-worker-2:10002"
+        - name: CUBESTORE_WORKER_PORT
+          value: "10002"
+        - name: CUBESTORE_REMOTE_DIR
+          value: "/cube/data"
+        - name: CUBESTORE_META_ADDR
+          value: "cubestore-router:9999"
+        volumeMounts:
+        - mountPath: /cube/data
+          name: cubestore-worker-2-pvc-0
+      volumes:
+      - name: cubestore-worker-2-pvc-0
+        persistentVolumeClaim:
+          claimName: cubestore-worker-2-pvc-0
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: cubestore-worker-2-pvc-0
+  name: cubestore-worker-2-pvc-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    app: cubestore-worker-2
+  name: cubestore-worker-2
+spec:
+  ports:
+  - name: "10001"
+    port: 10001
+    targetPort: 10001
+  selector:
+    app: cubestore-worker-2

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: cube-refresh-worker
+  labels:
+    app: cube-refresh-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cube-refresh-worker
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: cube-refresh-worker
+    spec:
+      containers:
+      - name: cube-refresh-worker
+        image: cubejs/cube:latest
+        env:
+        - name: CUBEJS_DEV_MODE
+          value: "false"
+        - name: CUBEJS_REFRESH_WORKER
+          value: "true"
+        - name: CUBEJS_CUBESTORE_HOST
+          value: "cubestore-router"
+        - name: CUBEJS_REDIS_URL
+          value: "redis://keydb:6379"
+        - name: CUBEJS_API_SECRET
+          value: "rx5fR6tbS43Qg5gk"
+        - name: CUBEJS_DB_TYPE
+          value: "postgres"
+        - name: CUBEJS_DB_HOST
+          value: "postgres"
+        - name: CUBEJS_DB_NAME
+          value: "postgresdb"
+        - name: CUBEJS_DB_USER
+          value: "postgresadmin"
+        - name: CUBEJS_DB_PASS
+          value: "WZ9edj9jgCZD7jbe"
+        - name: CUBEJS_DB_SSL
+          value: "false"
+        volumeMounts:
+        - mountPath: /cube/conf
+          name: cube-refresh-worker-pvc-0
+      volumes:
+      - name: cube-refresh-worker-pvc-0
+        persistentVolumeClaim:
+          claimName: cube-refresh-worker-pvc-0
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: cube-refresh-worker-pvc-0
+  name: cube-refresh-worker-pvc-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
