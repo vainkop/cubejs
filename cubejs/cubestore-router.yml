@@ -21,11 +21,18 @@ spec:
         image: cubejs/cubestore:latest
         ports:
         - containerPort: 9999
+        - containerPort: 3030
         env:
         - name: CUBESTORE_WORKERS
           value: "cubestore-worker-1:10001,cubestore-worker-2:10002"
-        - name: CUBESTORE_REMOTE_DIR
-          value: "/cube/data"
+        - name: CUBESTORE_S3_BUCKET
+          value: "<BUCKET_NAME_IN_S3>"
+        - name: CUBESTORE_S3_REGION
+          value: "<BUCKET_REGION_IN_S3>"
+        - name: CUBESTORE_AWS_ACCESS_KEY_ID
+          value: "<AWS_ACCESS_KEY_ID>"
+        - name: CUBESTORE_AWS_SECRET_ACCESS_KEY
+          value: "<AWS_SECRET_ACCESS_KEY>"
         - name: CUBESTORE_META_PORT
           value: "9999"
         - name: CUBESTORE_SERVER_NAME
@@ -63,5 +70,8 @@ spec:
   - name: "9999"
     port: 9999
     targetPort: 9999
+  - name: "3030"
+    port: 3030
+    targetPort: 3030
   selector:
     app: cubestore-router

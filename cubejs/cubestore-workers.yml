@@ -28,8 +28,14 @@ spec:
           value: "cubestore-worker-1:10001"
         - name: CUBESTORE_WORKER_PORT
           value: "10001"
-        - name: CUBESTORE_REMOTE_DIR
-          value: "/cube/data"
+        - name: CUBESTORE_S3_BUCKET
+          value: "<BUCKET_NAME_IN_S3>"
+        - name: CUBESTORE_S3_REGION
+          value: "<BUCKET_REGION_IN_S3>"
+        - name: CUBESTORE_AWS_ACCESS_KEY_ID
+          value: "<AWS_ACCESS_KEY_ID>"
+        - name: CUBESTORE_AWS_SECRET_ACCESS_KEY
+          value: "<AWS_SECRET_ACCESS_KEY>"
         - name: CUBESTORE_META_ADDR
           value: "cubestore-router:9999"
         volumeMounts:
@@ -98,8 +104,14 @@ spec:
           value: "cubestore-worker-2:10002"
         - name: CUBESTORE_WORKER_PORT
           value: "10002"
-        - name: CUBESTORE_REMOTE_DIR
-          value: "/cube/data"
+        - name: CUBESTORE_S3_BUCKET
+          value: "<BUCKET_NAME_IN_S3>"
+        - name: CUBESTORE_S3_REGION
+          value: "<BUCKET_REGION_IN_S3>"
+        - name: CUBESTORE_AWS_ACCESS_KEY_ID
+          value: "<AWS_ACCESS_KEY_ID>"
+        - name: CUBESTORE_AWS_SECRET_ACCESS_KEY
+          value: "<AWS_SECRET_ACCESS_KEY>"
         - name: CUBESTORE_META_ADDR
           value: "cubestore-router:9999"
         volumeMounts:
